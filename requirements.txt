@@ -1,0 +1,6 @@
+pytz~=2021.1
+waiting~=1.4.1
+setuptools~=56.2.0
+cloudscraper~=1.2.58
+bs4~=0.0.1
+beautifulsoup4~=4.9.3

@@ -1,0 +1,8 @@
+This project uses a modified version of the AternosAPI written by Duerocraft, licensed under the GNU Public Licence.
+    Original: (Github: https://github.com/Duerocraft/) (Project: https://github.com/Duerocraft/AternosAPI)
+    Modified: (Github: https://github.com/Matias-source) (Project: https://github.com/Matias-source/AternosAPI)
+        Modified: (Github: https://github.com/Gargantuan5k)
+All other code except external dependencies is Copyright (c) of Siddharth Vivek, licensed under the MIT License.
+
+Any modification, distribution or use (commercial or otherwise) of this project and its dependencies is subject to terms as
+specified in the respective licences.
