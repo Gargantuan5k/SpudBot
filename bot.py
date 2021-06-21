@@ -1,20 +1,18 @@
 from math import e
 import discord
 import random
-import time
+# import time
 import datetime
 import pytz
 from mcstatus import MinecraftServer
-
-from waiting import wait
-from AternosAPI.aternosapi import AternosAPI as API
+# from waiting import wait
 from discord.ext import commands
 
 client = commands.Bot(command_prefix="$")
-headers_cookie = open("bot-essentials/nnjg-properties/h-cookie.txt", "r").read()
-nnjg_token = open("bot-essentials/nnjg-properties/token.txt", "r").read()
+# headers_cookie = open("bot-essentials/nnjg-properties/h-cookie.txt", "r").read()
+# nnjg_token = open("bot-essentials/nnjg-properties/token.txt", "r").read()
 
-NNJG = API(headers=headers_cookie, TOKEN=nnjg_token)
+# NNJG = API(headers=headers_cookie, TOKEN=nnjg_token)
 
 tz = pytz.timezone("Asia/Calcutta")
 
