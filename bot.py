@@ -1,8 +1,10 @@
+from math import e
 import discord
 import random
 import time
 import datetime
 import pytz
+from mcstatus import MinecraftServer
 
 from waiting import wait
 from AternosAPI.aternosapi import AternosAPI as API
@@ -17,18 +19,6 @@ NNJG = API(headers=headers_cookie, TOKEN=nnjg_token)
 tz = pytz.timezone("Asia/Calcutta")
 
 
-def get_start_stop_embed(title, desc, icon_url=None, color=discord.Color.blue()):
-    embed = discord.Embed(
-        title=title, description=desc, colour=color, timestamp=datetime.datetime.utcnow()
-    )
-    embed.set_footer(text="SpudBot says hi :)")
-    embed.set_author(name="SpudBot")
-    if icon_url is not None:
-        embed.set_image(url=icon_url)
-
-    return embed
-
-
 @client.event
 async def on_ready():
     print("NNJGBot: Connection successful Status: READY")
@@ -36,126 +26,68 @@ async def on_ready():
 
 tok_file = open("bot-essentials/token.txt", "r")
 TOKEN = tok_file.read()
+print(TOKEN)
 
 
-@client.command()
+def get_server_ping():
+    server = MinecraftServer.lookup(open("bot-essentials/nnjg-properties/server-ip.txt", "r").read())
+    # server = MinecraftServer.lookup("namehaven.aternos.me:34387")
+
+    try:
+        status = server.status()
+    except:
+        return None
+
+    return status.players.online, status.latency
+
+@client.command(aliases=["status", "serverstatus", "serverinfo"])
 async def ping(ctx):
+    server_ip = open("bot-essentials/nnjg-properties/server-ip.txt", "r").read()
     res_list = ["hi", "pong", "AY", "ok", "Ok", "Yessir", "You called?", "Mhm?", "Whag", "What", "oki", "oke"]
-    await ctx.send(f"{random.choice(res_list)}")
-    time.sleep(0.5)
-    await ctx.send(f"O did you mean my latency? {round(client.latency * 1000)}ms "
-                   f"\nno way he")
+
+    embed = discord.Embed(
+        title="NNJG Minecraft Server Ping",
+        description=f"{random.choice(res_list)}",
+        color=discord.Color.gold(),
+        timestamp=datetime.datetime.utcnow()
+    )
+    
+    if get_server_ping() is not None:
+        num_online, latency = get_server_ping()
+
+        embed.add_field(name="Status", value="**ONLINE**", inline=True)
+        embed.add_field(name="IP", value=f"`{server_ip.split(':')[0]}`", inline=True)
+        embed.add_field(name="Port", value=f"`{server_ip.split(':')[1]}`", inline=True)
+        embed.add_field(name="Players Online", value=f"`{num_online}`", inline=True)
+        embed.add_field(name="Latency (ping)", value=f"`{latency}`", inline=True)
+        message = "**Server is Online** :)"
+    
+    else:
+        embed.add_field(name="Status", value="**OFFLINE**", inline=True)
+        message = "**The NNJG Server is currently Offline. Please Ping @Minecraft Server Admin if you want it started** :)"
+
+    embed.set_footer(text="SpudBot says hi :)")
+    embed.set_author(name="SpudBot")
+
+    await ctx.send(embed=embed)
+    await ctx.send(message)
 
 
 @client.command(aliases=["8ball", "eight-ball", "prophecy", "answerme"])
 async def eightball(ctx, *, question):
     res_list = [
         "Yee", "Definitely", "Whag no", "Lmao no way", "Mayhaps", "Maybe idk",
-        "Why you askin' me I'm just a poor ~~boy from a poor family~~ discord bot", "Seems likely",
-        "Ye", "No idiot", "Yes idiot", "Why would you even ask that question?", "Yesn't", "Ok", "If you say so",
+        "Why you askin' me\n I'm just a poor ~~boy~~ bot from a poor family\nSpare me my life from this monstrosity\nGALILEO GALILEO GALILEO FIGAR- ok ill stop",
+         "Seems likely", "Ye", "No idiot", "Yes idiot", "Why would you even ask that question?", "Yesn't", "Ok", "If you say so",
         "69420", "Elephant", "My sources ~~google~~ say yes", "My sources ~~google~~ say no",
-        "Poor connection try again",
-        "SPUDBOT_CRITICAL_ERROR: STUPID_QUESTION_001", "Beep boop. Boop beep?", "Yes", "No", "Aye matey", "Nay matey",
+        "Poor connection try again", "Mayhaps", "Uhhhhhh lemme see... lmao jk screw you", "cate", "doge", "@everyone\nGet pranked lol"
+        "SPUDBOT_CRITICAL_ERROR: 001 STUPID_QUESTION", "Beep boop. Boop beep?", "Yes", "No", "Aye matey", "Nay matey",
         "As ze French like to say it, \"Oui\".", "As ze French like to say it, \"Non\".", "Doubtful", "Truly good sir",
-        "No I don't think I will."
+        "No I don't think I will.", "Get outta my room im playing minecraft", "Yes", "Yes", "Yes", "Yes", "Yes", "No", "No",
+        "No", "No", "No" 
     ]
     await ctx.send(f"{random.choice(res_list)}")
 
-
-@client.command(aliases=["serverstart", "start-server", "ss", "start"])
-async def start_server(ctx):
-    if NNJG.GetStatus() == "Online":
-        embed = get_start_stop_embed("NNJG Official Minecraft Server",
-                                                  f":ballot_box_with_check: Server is now Online {ctx.author.mention}!"
-                                                  "\nJoin the game!\n",
-                                                  color=discord.Color.gold())
-
-        embed.add_field(name="IP", value="`nnjg.ml`", inline=True)
-        embed.add_field(name="Port", value="34387", inline=True)
-        embed.add_field(name="Status", value=NNJG.GetStatus(), inline=True)
-
-    elif NNJG.GetStatus() == "Offline":
-        NNJG.StartServer()
-        await ctx.send(f"{ctx.author.mention} Server is starting, please wait for my confirmation ...")
-
-        def server_on():
-            return NNJG.GetStatus() == "Online"
-
-        wait(lambda: server_on())
-
-        embed = get_start_stop_embed("NNJG Official Minecraft Server",
-                                                  f":ballot_box_with_check: Server is now Online {ctx.author.mention}!"
-                                                  "\nYou can join the server now :).\n",
-                                                  color=discord.Color.green())
-        embed.add_field(name="IP", value="`nnjg.ml`", inline=True)
-        embed.add_field(name="Port", value="34387", inline=True)
-        embed.add_field(name="Status", value=NNJG.GetStatus(), inline=True)
-
-        await ctx.send(embed=embed)
-
-
-@client.command(aliases=["serverstop", "stop-server", "sts", "stop"])
-async def stop_server(ctx):
-    if NNJG.GetStatus() == "Online":
-        NNJG.StopServer()
-        await ctx.send(f"{ctx.author.mention} Server is stopping, please wait for my confirmation ...")
-
-        def server_on():
-            return NNJG.GetStatus() == "Online"
-
-        wait(lambda: not server_on())
-
-        await ctx.send(embed=get_start_stop_embed(f"NNJG Official Minecraft Server",
-                                                  f":ballot_box_with_check:  {ctx.author.mention} Server is now Offline!"
-                                                  "\nUse `$start-server` to start it again.",
-                                                  color=discord.Color.red()))
-
-    elif NNJG.GetStatus() == "Offline":
-        await ctx.send(embed=get_start_stop_embed("NNJG Official Minecraft Server", f":x: {ctx.author.mention} Server is already Offline!\n"
-                                                                                    "\nSay `$start-server` to start "
-                                                                                    "it again!",
-                                                  color=discord.Color.gold()))
-
-
-@client.command(aliases=["srestart", "server-restart", "restart-server"])
-async def restart_server(ctx):
-    if NNJG.GetStatus() == "Offline":
-        await ctx.send(ctx.author.mention + " The server is currently Offline so I'll just start it")
-        await start_server(ctx)
-    elif NNJG.GetStatus() == "Online":
-        await ctx.send(ctx.author.mention + " Restarting server, please wait for my confirmation")
-
-        def server_on():
-            return NNJG.GetStatus() == "Online"
-
-        wait(lambda: server_on())
-
-        embed = get_start_stop_embed("NNJG Official Minecraft Server (RESTARTED)",
-                                                  f":ballot_box_with_check: Server is now Online {ctx.author.mention}!"
-                                                  "\nYou can join the server now :).\n",
-                                                  color=discord.Color.green())
-        embed.add_field(name="IP", value="`nnjg.ml`", inline=True)
-        embed.add_field(name="Port", value="34387", inline=True)
-        embed.add_field(name="Status", value=NNJG.GetStatus(), inline=True)
-
-        await ctx.send(embed=embed)
-
-
-@client.command(aliases=["server-status", "sstatus", "serverstatus", "serverinfo", "server-info", "server_info", "sinfo"])
-async def server_status(ctx):
-    status = NNJG.GetStatus()
-    embed = discord.Embed(
-        title="NNJG Official Minecraft Server Status",
-        description=f"{ctx.author.mention} Server is currently {status}. To start/stop the server, please use the appropriate commands :).",
-        timestamp=datetime.datetime.utcnow(), color=discord.Color.blue()
-    )
-    embed.add_field(name="IP", value="`nnjg.ml`", inline=True)
-    embed.add_field(name="Port", value="34387", inline=True)
-    embed.add_field(name="Status", value=status, inline=True)
-
-    embed.set_footer(text="SpudBot says hi :).")
-
-    await ctx.send(embed=embed)
 
 
 client.run(TOKEN)
