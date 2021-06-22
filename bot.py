@@ -4,17 +4,37 @@ import random
 # import time
 import datetime
 import pytz
+import undetected_chromedriver.v2 as uc
+
 from mcstatus import MinecraftServer
 # from waiting import wait
 from discord.ext import commands
+from selenium.webdriver.common.keys import Keys
+
+driver = uc.Chrome()
+driver.get("https://www.cleverbot.com")
+driver.find_element_by_id("noteb").click()
 
 client = commands.Bot(command_prefix="$")
+# client = commands.Bot(command_prefix="^")
 # headers_cookie = open("bot-essentials/nnjg-properties/h-cookie.txt", "r").read()
 # nnjg_token = open("bot-essentials/nnjg-properties/token.txt", "r").read()
 
 # NNJG = API(headers=headers_cookie, TOKEN=nnjg_token)
 
 tz = pytz.timezone("Asia/Calcutta")
+
+def get_chat_response(message):
+    driver.find_element_by_class_name("stimulus").send_keys(message + Keys.RETURN)
+    while True:
+        try:
+            driver.find_element_by_id("snipTextIcon")
+            break
+        except:
+            continue
+    
+    response = driver.find_element_by_xpath('//*[@id="line1"]/span[1]').text
+    return response
 
 
 @client.event
@@ -24,6 +44,7 @@ async def on_ready():
 
 tok_file = open("bot-essentials/token.txt", "r")
 TOKEN = tok_file.read()
+# TOKEN = "ODU2NTIzMTk3NDQ4MzIzMDky.YNCRYw.31FVbwh-wUKdEuGOZy_25zrtiiw"
 print(TOKEN)
 
 
@@ -86,6 +107,9 @@ async def eightball(ctx, *, question):
     ]
     await ctx.send(f"{random.choice(res_list)}")
 
-
+@client.command(aliases=["talk", "speak"])
+async def chat(ctx, *, message):
+    response = get_chat_response(message)
+    await ctx.send(response)
 
 client.run(TOKEN)
