@@ -11,13 +11,13 @@ from mcstatus import MinecraftServer
 from discord.ext import commands
 from selenium.webdriver.common.keys import Keys
 
-GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
-CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+# GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
+# CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
 chrome_options = uc.ChromeOptions()
 chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--no-sandbox')
-chrome_options.binary_location = GOOGLE_CHROME_PATH
-driver = uc.Chrome(executable_path=CHROMEDRIVER_PATH, options=chrome_options)
+# chrome_options.binary_location = GOOGLE_CHROME_PATH
+driver = uc.Chrome(options=chrome_options)
 
 driver.get("https://www.cleverbot.com")
 driver.find_element_by_id("noteb").click()
