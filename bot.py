@@ -25,7 +25,7 @@ print(TOKEN)
 
 def get_server_ping():
     server = MinecraftServer.lookup(os.environ.get("MCSERVER_IP"))
-    # server = os.environ.get("DEBUG_MCSERVER_IP") #! Debug MC server IP
+    # server = MinecraftServer.lookup(os.environ.get("DEBUG_MCSERVER_IP")) #! Debug MC server IP
 
     try:
         status = server.status()
@@ -36,7 +36,7 @@ def get_server_ping():
 
 @client.command(aliases=["status", "serverstatus", "serverinfo"])
 async def ping(ctx):
-    server_ip = open("bot-essentials/nnjg-properties/server-ip.txt", "r").read()
+    server_ip = os.environ.get("MCSERVER_IP")
     res_list = ["hi", "pong", "AY", "ok", "Ok", "Yessir", "You called?", "Mhm?", "Whag", "What", "oki", "oke"]
 
     embed = discord.Embed(
