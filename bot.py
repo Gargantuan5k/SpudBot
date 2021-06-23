@@ -1,47 +1,20 @@
-from math import e
 import discord
 import random
-# import time
 import datetime
 import pytz
-import undetected_chromedriver.v2 as uc
+import wikipedia
 
 from mcstatus import MinecraftServer
-# from waiting import wait
 from discord.ext import commands
-from selenium.webdriver.common.keys import Keys
+from prsaw import RandomStuff
+from math import e
 
-# GOOGLE_CHROME_PATH = '/app/.apt/usr/bin/google_chrome'
-# CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
-# chrome_options = uc.ChromeOptions()
-# chrome_options.add_argument('--disable-gpu')
-# chrome_options.add_argument('--no-sandbox')
-# chrome_options.binary_location = GOOGLE_CHROME_PATH
-driver = uc.Chrome()
-
-driver.get("https://www.cleverbot.com")
-driver.find_element_by_id("noteb").click()
-
+rs = RandomStuff()
 client = commands.Bot(command_prefix="$")
-# client = commands.Bot(command_prefix="^")
-# headers_cookie = open("bot-essentials/nnjg-properties/h-cookie.txt", "r").read()
-# nnjg_token = open("bot-essentials/nnjg-properties/token.txt", "r").read()
-
-# NNJG = API(headers=headers_cookie, TOKEN=nnjg_token)
-
 tz = pytz.timezone("Asia/Calcutta")
 
-def get_chat_response(message):
-    driver.find_element_by_class_name("stimulus").send_keys(message + Keys.RETURN)
-    while True:
-        try:
-            driver.find_element_by_id("snipTextIcon")
-            break
-        except:
-            continue
-    
-    response = driver.find_element_by_xpath('//*[@id="line1"]/span[1]').text
-    return response
+def get_chat_response(message): 
+    return rs.get_ai_response(message)
 
 
 @client.event
@@ -51,12 +24,16 @@ async def on_ready():
 
 tok_file = open("bot-essentials/token.txt", "r")
 TOKEN = tok_file.read()
-# TOKEN = "ODU2NTIzMTk3NDQ4MzIzMDky.YNCRYw.31FVbwh-wUKdEuGOZy_25zrtiiw"
-print(TOKEN)
 
+#! DEBUG TOKEN (SpudBotTest) ln=28
+# TOKEN = "ODU2NTIzMTk3NDQ4MzIzMDky.YNCRYw.31FVbwh-wUKdEuGOZy_25zrtiiw"
+
+print(TOKEN)
 
 def get_server_ping():
     server = MinecraftServer.lookup(open("bot-essentials/nnjg-properties/server-ip.txt", "r").read())
+
+    #! DEBUG SERVER LOOKUP IP (ln=37)
     # server = MinecraftServer.lookup("namehaven.aternos.me:34387")
 
     try:
@@ -106,17 +83,12 @@ async def eightball(ctx, *, question):
         "Why you askin' me\n I'm just a poor ~~boy~~ bot from a poor family\nSpare me my life from this monstrosity\nGALILEO GALILEO GALILEO FIGAR- ok ill stop",
          "Seems likely", "Ye", "No idiot", "Yes idiot", "Why would you even ask that question?", "Yesn't", "Ok", "If you say so",
         "69420", "Elephant", "My sources ~~google~~ say yes", "My sources ~~google~~ say no",
-        "Poor connection try again", "Mayhaps", "Uhhhhhh lemme see... lmao jk screw you", "cate", "doge", "@everyone\nGet pranked lol"
+        "Poor connection try again", "Mayhaps", "Uhhhhhh lemme see... lmao jk screw you", "cate", "doge",
         "SPUDBOT_CRITICAL_ERROR: 001 STUPID_QUESTION", "Beep boop. Boop beep?", "Yes", "No", "Aye matey", "Nay matey",
-        "As ze French like to say it, \"Oui\".", "As ze French like to say it, \"Non\".", "Doubtful", "Truly good sir",
+        "As ze French like to say it, \"Oui\".", "As ze French like to say it, \"Non\".", "Doubtful", "Truly g  ood sir",
         "No I don't think I will.", "Get outta my room im playing minecraft", "Yes", "Yes", "Yes", "Yes", "Yes", "No", "No",
         "No", "No", "No" 
     ]
     await ctx.send(f"{random.choice(res_list)}")
-
-@client.command(aliases=["talk", "speak"])
-async def chat(ctx, *, message):
-    response = get_chat_response(message)
-    await ctx.send(response)
 
 client.run(TOKEN)
