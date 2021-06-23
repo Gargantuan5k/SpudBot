@@ -9,8 +9,8 @@ from decouple import config
 from mcstatus import MinecraftServer
 from discord.ext import commands
 
-# prefix = config('DISCORD_BOT_PREFIX')
-prefix = config('DISCORD_BOT_TEST_PREFIX')    #! Test
+prefix = config('DISCORD_BOT_PREFIX')
+# prefix = config('DISCORD_BOT_TEST_PREFIX')    #! Test
 client = commands.Bot(command_prefix=prefix)
 tz = pytz.timezone("Asia/Calcutta")
 
@@ -18,8 +18,8 @@ tz = pytz.timezone("Asia/Calcutta")
 async def on_ready():
     print("NNJGBot: Connection successful Status: READY")
 
-# TOKEN = config('DISCORD_BOT_TOKEN')
-TOKEN = config('DISCORD_BOT_TEST_TOKEN') #! Debug Bot Token
+TOKEN = config('DISCORD_BOT_TOKEN')
+# TOKEN = config('DISCORD_BOT_TEST_TOKEN') #! Debug Bot Token
 
 print(TOKEN)
 
