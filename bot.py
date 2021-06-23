@@ -6,15 +6,15 @@ import wikipedia
 
 from mcstatus import MinecraftServer
 from discord.ext import commands
-from prsaw import RandomStuff
+# from prsaw import RandomStuff
 from math import e
 
-rs = RandomStuff()
+# rs = RandomStuff()
 client = commands.Bot(command_prefix="$")
 tz = pytz.timezone("Asia/Calcutta")
 
-def get_chat_response(message): 
-    return rs.get_ai_response(message)
+# def get_chat_response(message): 
+#     return rs.get_ai_response(message)
 
 
 @client.event
