@@ -116,7 +116,7 @@ def get_wiki_response(query):
                 pass
     return "_I couldn't find anything about your question on Wikipedia :/_"
 
-@client.command()
+@client.command(aliases=["wikipedia"])
 async def wiki(ctx, *, query):
     response = get_wiki_response(query)
 
@@ -160,6 +160,7 @@ async def wiki(ctx, *, query):
 """
 
 @client.command(aliases=["clr", "cc", "delete"])
+@commands.has_permissions(manage_messages=True)
 async def clear(ctx, amt=1):
     await ctx.channel.purge(limit=amt+1)
 
