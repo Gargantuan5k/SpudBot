@@ -3,10 +3,10 @@ import datetime
 from decouple import config
 from discord.ext import commands
 
-prefix = config('DISCORD_BOT_PREFIX')
-TOKEN = config('DISCORD_BOT_TOKEN')
-# TOKEN = config('DISCORD_BOT_TEST_TOKEN') #! Debug Bot Token
-# prefix = config('DISCORD_BOT_TEST_PREFIX')    #! Test
+# prefix = config('DISCORD_BOT_PREFIX')
+# TOKEN = config('DISCORD_BOT_TOKEN')
+TOKEN = config('DISCORD_BOT_TEST_TOKEN') #! Debug Bot Token
+prefix = config('DISCORD_BOT_TEST_PREFIX')    #! Test
 MCSERVER_IP = config("MCSERVER_IP")
 DEBUG_MCSERVER_IP = config("DEBUG_MCSERVER_IP")
 
@@ -18,7 +18,7 @@ async def on_ready():
     print(TOKEN)
 
 
-cogs = ["commandevents", "fun", "administrator", "chatbot", "mcserver"]
+cogs = ["commandevents", "fun", "administrator", "chatbot", "mcserver", "music"]
 if __name__ == "__main__":
     for cog in cogs:
         client.load_extension("cogs." + cog)
