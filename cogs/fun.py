@@ -1,8 +1,25 @@
 import discord
 import datetime
 import random
+import praw
 
 from discord.ext import commands
+from decouple import config
+
+REDDIT_CLIENT_ID = config('REDDIT_CLIENT_ID')
+REDDIT_CLIENT_SECRET = config('REDDIT_CLIENT_SECRET')
+REDDIT_USERNAME = config('REDDIT_USERNAME')
+REDDIT_USER_AGENT = config('REDDIT_USER_AGENT')
+REDDIT_PASSWORD = config('REDDIT_PASSWORD')
+
+Reddit = praw.Reddit(
+    client_id=REDDIT_CLIENT_ID,
+    client_secret=REDDIT_CLIENT_SECRET, 
+    username=REDDIT_USERNAME, 
+    password=REDDIT_PASSWORD, 
+    user_agent=REDDIT_USER_AGENT
+)
+
 
 class Fun(commands.Cog):
     def __init__(self, client):
@@ -80,6 +97,33 @@ class Fun(commands.Cog):
 
         embed.set_footer(text="SpudBot says hi :)")
         embed.set_author(name="The Spudball")
+        await ctx.send(embed=embed)
+
+    
+    @commands.command(aliases=["meem", "maymay", "fune"])
+    async def meme(self, ctx):
+        sub = Reddit.subreddit("memes")
+        all_submissions = []
+        top = sub.top(limit=100)
+
+        for submission in top:
+            all_submissions.append(submission)
+        
+        ret_submission = random.choice(all_submissions)
+        submission_name = ret_submission.title
+        url = ret_submission.url
+
+        embed = discord.Embed(
+            url="https://reddit.com" + ret_submission.permalink,
+            title=f"{submission_name}",
+            color=discord.Color.red(),
+            timestamp=datetime.datetime.utcnow()
+        )
+
+        embed.set_image(url=url)
+        embed.set_footer(text=f"👍 {int(ret_submission.score)} 💬 {int(ret_submission.num_comments)}  •  In r/{sub}")
+        embed.set_author(name=f"Posted by u/{ret_submission.author.name}")
+
         await ctx.send(embed=embed)
 
 

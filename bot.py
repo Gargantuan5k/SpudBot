@@ -18,7 +18,7 @@ async def on_ready():
     print(TOKEN)
 
 
-cogs = ["commandevents", "fun", "administrator", "chatbot", "mcserver", "music"]
+cogs = ["commandevents", "fun", "administrator", "chatbot", "mcserver"]
 if __name__ == "__main__":
     for cog in cogs:
         client.load_extension("cogs." + cog)
