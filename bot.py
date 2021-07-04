@@ -3,10 +3,10 @@ import datetime
 from decouple import config
 from discord.ext import commands
 
-# prefix = config('DISCORD_BOT_PREFIX')
-# TOKEN = config('DISCORD_BOT_TOKEN')
-TOKEN = config('DISCORD_BOT_TEST_TOKEN') #! Debug Bot Token
-prefix = config('DISCORD_BOT_TEST_PREFIX')    #! Test
+prefix = config('DISCORD_BOT_PREFIX')
+TOKEN = config('DISCORD_BOT_TOKEN')
+# TOKEN = config('DISCORD_BOT_TEST_TOKEN') #! Debug Bot Token
+# prefix = config('DISCORD_BOT_TEST_PREFIX')    #! Test
 MCSERVER_IP = config("MCSERVER_IP")
 DEBUG_MCSERVER_IP = config("DEBUG_MCSERVER_IP")
 
