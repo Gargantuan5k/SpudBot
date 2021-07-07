@@ -96,7 +96,7 @@ class Chatbot(commands.Cog):
         self.client = client
         self.wikipedia_commands = WikipediaCommands()
         self.chatbot_commands = ChatBotCommands()
-        self.chatbot_channel_id = config('CHATBOT_CHANNEL_ID')
+        self.chatbot_channel_id = int(config('CHATBOT_CHANNEL_ID'))
         # self.chatbot_channel_id = int(config('CHATBOT_TEST_CHANNEL_ID'))   #! Debug Chatbot Channel ID
 
     @commands.command(aliases=["wikipedia"])
